@@ -1,0 +1,31 @@
+import json
+import os,math
+def distance_calculator(tup1,tup2):
+    return math.hypot(int(tup2[0]) - tup1[0], int(tup2[1]) - tup1[1])
+
+try:
+    #Take input from the user
+    x=int(raw_input('Enter x value: '))
+    y=int(raw_input('Enter y value: '))
+    #Read the coordinates json file
+    filepath=os.getcwd()+'/test/coordinates.json'
+    fp=open(filepath,'r')
+    jsoncontent=fp.read()
+    coordinates=json.loads(jsoncontent)
+    #loop through list of coordinates and calculate the distance
+    distancedict={}
+    for coordinate in coordinates:
+
+        dist=distance_calculator((x,y),tuple(str(coordinate['value']).split(',')))
+        distancedict[str(coordinate['id'])]=dist
+    #print(distancedict)
+    finaldictionary=sorted(distancedict.items(), key=lambda x:x[1])
+    #print(finaldictionary)
+    print('nearest points in order')
+    for finaldict in finaldictionary:
+        point=(item for item in coordinates if item["id"] == finaldict[0]).next()
+        print(point)
+
+except Exception,e:
+    print(e)
+
